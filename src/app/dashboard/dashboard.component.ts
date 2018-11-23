@@ -21,6 +21,7 @@ declare var Highcharts: any;
 export class DashboardComponent implements OnInit {
 
   urlRH = "https://sigerh.azurewebsites.net/api/";
+  urlMV = "https://sigemv.azurewebsites.net/api/";
   urlFinanceiro = "http://trabalhosige.azurewebsites.net/api/";
   urlProd = "?";
 
@@ -31,25 +32,25 @@ export class DashboardComponent implements OnInit {
     this.listaFuncionarios = this.getFuncionarios();
     var funci = [];
     this.listaFuncionarios.forEach(F => {
-      if (F.Cargo == "Vendedor" )
+      if (F.Cargo == "Vendedor" && funci.length < 2)
         funci.push(F);
     });
 
     var funciProntos = [];
     var listaDrilldown = [];
-    funci.forEach(fp => {
+    funci.forEach((fp,index) => {
       var fvm = new FuncionarioVendasViewModel();
       fvm.name = fp.Nome;
-      fvm.y = 4000000;
+      fvm.y = 4000000 - ((index + 1 )) * 70000;
       var dd = new SerieDrilldownViewModel();
       dd.id = "total" + fvm.name.trim();
       fvm.drilldown = dd.id;
       dd.colorByPoint = true;
       dd.name = "Tipos Coque x Valor"
-      dd.data.push(CoqueValor.returnCoqueValor("Ótimo", 2500000));
-      dd.data.push(CoqueValor.returnCoqueValor("Bom", 1000000));
-      dd.data.push(CoqueValor.returnCoqueValor("Médio", 750000));
-      dd.data.push(CoqueValor.returnCoqueValor("Ruim", 250000));
+      dd.data.push(CoqueValor.returnCoqueValor("Ótimo", 2500000 - ((index + 1 )) * 70000));
+      dd.data.push(CoqueValor.returnCoqueValor("Bom", 1000000 - ((index + 1 )) * 70000));
+      dd.data.push(CoqueValor.returnCoqueValor("Médio", 750000 - ((index + 1 )) * 70000));
+      //dd.data.push(CoqueValor.returnCoqueValor("Ruim", 250000 - ((index + 1 )) * 70000));
       funciProntos.push(fvm);
       listaDrilldown.push(dd);
     });
