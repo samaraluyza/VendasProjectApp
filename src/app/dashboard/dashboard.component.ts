@@ -82,42 +82,10 @@ export class DashboardComponent implements OnInit {
         series: [{
           name: 'Funcionários',
           colorByPoint: true,
-          data: funciProntos
-
-
-          // [{
-          //   name: 'Samara',
-          //   y: 4000000,
-          //   drilldown: 'totalSamara'
-          // }]
+          data: funciProntos         
         }],
         drilldown: {
           series: listaDrilldown
-
-
-
-          // [{
-          //   id: 'totalSamara',
-          //   colorByPoint: true,
-          //   name: 'Tipos Coque x Valor',
-          //   data: [
-          //     ['Ótimo', 2500000],
-          //     ['Bom', 1000000],
-          //     ['Médio', 750000],
-          //     ['Ruim', 250000]
-          //   ]
-          // }// }, {
-
-          //   //   id: 'tiposSamara',
-          //   //   name: 'Tipos Coque x Valor',
-          //   //   data: [
-          //   //     ['Ótimo', 2500000],
-          //   //     ['Bom', 1000000],
-          //   //     ['Médio', 750000],
-          //   //     ['Ruim', 250000]
-          //   //   ]
-          //   // }
-          // ]
         }
       });
 
