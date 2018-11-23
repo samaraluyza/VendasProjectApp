@@ -1,114 +1,149 @@
+import { CoqueValor } from './../util/CoqueValor';
+// import { Drilldown } from 'highcharts';
+
 /**
  * Created by mohma on 7/26/2017.
  */
-import {Component, OnInit} from '@angular/core';
-import {StatsCard} from "../components/statsCard/statsCard";
-import {PieChart} from "../components/pieChart/pieChart";
-
+//import * as Highcharts from 'highcharts';
+import { Component, OnInit } from '@angular/core';
+import { StatsCard } from "../components/statsCard/statsCard";
+import { PieChart } from "../components/pieChart/pieChart";
+import { FuncionarioVendasViewModel } from 'app/models/funcionarioViewModel';
+import { SerieDrilldownViewModel } from 'app/models/serieDrilldownViewModel';
+//import Drilldown from "highcharts" 
+// Drilldown(Highcharts);
+declare var Highcharts: any;
 @Component({
   templateUrl: './dashboard.component.html',
-  selector:'dashboard',
-  styleUrls:['./dashboard.scss']
+  selector: 'dashboard',
+  styleUrls: ['./dashboard.scss']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
+
+  urlRH = "https://sigerh.azurewebsites.net/api/";
+  urlFinanceiro = "http://trabalhosige.azurewebsites.net/api/";
+  urlProd = "?";
 
 
-  public chartHeight=35;
-
-  public ChartOptions:any = {
-    scaleShowVerticalLines: false,
-    responsive: true,
-    mainAspectRatio:false
-  };
-
-  //Timeline Related
-  public completeListener(item){
-    console.log(item);
-    return true;
-  }
-  public timelineData:Array<Object> =[
-    {
-      title:"Step 1",
-      icon:'<i class="fa fa-home"></i>',
-      content:"Hello World",
-      complete:true
-    },
-    {
-      title:"Step 2",
-      icon:'<i class="fa fa-pencil"></i>',
-      content:"Welcome World",
-      complete:false
-    }
-  ];
-
+  listaFuncionarios: any[];
   ngOnInit(): void {
-    let self=this;
-    setTimeout(function(){
-      self.timelineData.push({
-        title:"Step 3",
-        icon:'<i class="fa fa-remove"></i>',
-        content:"Bye World",
-        complete:false
+    this.listaFuncionarios = [];
+    this.listaFuncionarios = this.getFuncionarios();
+    var funci = [];
+    this.listaFuncionarios.forEach(F => {
+      if (F.Cargo == "Vendedor" )
+        funci.push(F);
+    });
+
+    var funciProntos = [];
+    var listaDrilldown = [];
+    funci.forEach(fp => {
+      var fvm = new FuncionarioVendasViewModel();
+      fvm.name = fp.Nome;
+      fvm.y = 4000000;
+      var dd = new SerieDrilldownViewModel();
+      dd.id = "total" + fvm.name.trim();
+      fvm.drilldown = dd.id;
+      dd.colorByPoint = true;
+      dd.name = "Tipos Coque x Valor"
+      dd.data.push(CoqueValor.returnCoqueValor("Ótimo", 2500000));
+      dd.data.push(CoqueValor.returnCoqueValor("Bom", 1000000));
+      dd.data.push(CoqueValor.returnCoqueValor("Médio", 750000));
+      dd.data.push(CoqueValor.returnCoqueValor("Ruim", 250000));
+      funciProntos.push(fvm);
+      listaDrilldown.push(dd);
+    });
+
+    Highcharts.chart('container',
+      {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: 'Relatório Vendas por Funcionário em Reais'
+        },
+        xAxis: {
+          type: 'category'
+        },
+
+        legend: {
+          enabled: false
+        },
+
+        plotOptions: {
+          series: {
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        series: [{
+          name: 'Funcionários',
+          colorByPoint: true,
+          data: funciProntos
+
+
+          // [{
+          //   name: 'Samara',
+          //   y: 4000000,
+          //   drilldown: 'totalSamara'
+          // }]
+        }],
+        drilldown: {
+          series: listaDrilldown
+
+
+
+          // [{
+          //   id: 'totalSamara',
+          //   colorByPoint: true,
+          //   name: 'Tipos Coque x Valor',
+          //   data: [
+          //     ['Ótimo', 2500000],
+          //     ['Bom', 1000000],
+          //     ['Médio', 750000],
+          //     ['Ruim', 250000]
+          //   ]
+          // }// }, {
+
+          //   //   id: 'tiposSamara',
+          //   //   name: 'Tipos Coque x Valor',
+          //   //   data: [
+          //   //     ['Ótimo', 2500000],
+          //   //     ['Bom', 1000000],
+          //   //     ['Médio', 750000],
+          //   //     ['Ruim', 250000]
+          //   //   ]
+          //   // }
+          // ]
+        }
       });
-    },5000);
+
+
   }
 
-  //Card
-
-  public card1:StatsCard={color:"#1ebfae",icon:"fa-users",label:"Users",data:50};
-  public card2:StatsCard={color:"#30a5ff",icon:"fa-cogs",label:"Items",data:80};
-  public card3:StatsCard={color:"#ffb53e",icon:"fa-cogs",label:"Orders",data:90};
-  public card4:StatsCard={color:"#f9243f",icon:"fa-cog",label:"Delivered",data:2};
-
-  //ProgressBars
-  public pbar1:PieChart={color:"#1ebfae",max:100,label:"Load",current:2};
-  public pbar2:PieChart={color:"#30a5ff",max:100,label:"Traffic",current:20};
-  public pbar3:PieChart={color:"#ffb53e",max:100,label:"Users",current:50};
-  public pbar4:PieChart={color:"#f9243f",max:100,label:"RAM",current:57};
-
-
-  // lineChart
-  public lineChartData:Array<any> = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-    {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
-  public lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-  public lineChartType:string = 'line';
-
-
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
-  }
-
-  public chartHovered(e:any):void {
-    console.log(e);
-  }
-
-  //News Component
-  public newsList:Array<Object> =[
-    {
-      large:"30",
-      small:"Jun",
-      link:"http://www.aebiss.com",
-      title:"AEBISS",
-      content:"Fullstack development, IoT, Blockchain related services in the U.A.E"
-    },
-    {
-      large:"1",
-      small:"Jul",
-      link:"http://www.tayar.ae",
-      title:"Tayar",
-      content:"One device that let you control any electrical device at home"
-    },
-    {
-      large:"1",
-      small:"Jul",
-      link:"http://www.wavex.io",
-      title:"WaveX",
-      content:"Blockchain based electricity trading platform"
+  httpGet(Url, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        callback(xmlHttp.responseText);
     }
-  ]
+
+    xmlHttp.open("GET", Url, false); // true for asynchronous 
+    xmlHttp.send();
+  }
+
+  getFuncionarios(): any {
+    var result;
+    this.httpGet(this.urlRH + "Funcionarios", res => {
+      result = JSON.parse(res);
+    })
+    return result;
+  }
+
+
+
 }
 
 
