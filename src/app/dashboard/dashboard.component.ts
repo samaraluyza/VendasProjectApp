@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
   urlRH = "https://sigerh.azurewebsites.net/api/";
   urlMV = "https://sigemv.azurewebsites.net/api/";
   urlFinanceiro = "http://trabalhosige.azurewebsites.net/api/";
-  urlProd = "https://production-api.azurewebsites.net/api/";
+  urlProd = "https://sigepm.azurewebsites.net/";
 
 
   listaFuncionarios: any[];
@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     this.montarRelatorio1();
   }
 
-  montarRelatorio1(){
+  montarRelatorio1() {
     var funci = [];
     this.listaFuncionarios.forEach(F => {
       if (F.Cargo == "Vendedor" && funci.length < 2)
@@ -54,30 +54,28 @@ export class DashboardComponent implements OnInit {
       var totalQuantidadeVendidaRuim = 0;
 
       var preco = this.getValorProduto();
+      var qualidades = this.getAllQualidades();
+      var case1 = qualidades.filter(function (q) {
+        return q.id_qualidade == 1
+      })
+      var case2 = qualidades.filter(function (q) {
+        return q.id_qualidade == 2
+      })
+      var case3 = qualidades.filter(function (q) {
+        return q.id_qualidade == 3
+      })
       vendas.forEach(v => {
         switch (v.qualidade) {
-          case 1:
-          case 2:
+          case case1:
+            totalQuantidadeVendidaOtimo += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
             break;
 
-          case 3:
-          case 4:
-            totalQuantidadeVendidaRuim += parseFloat((v.quantidade * preco).toFixed(2));
+          case case2:
+            totalQuantidadeVendidaBom += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
             break;
 
-          case 5:
-          case 6:
-            totalQuantidadeVendidaMedio += parseFloat((v.quantidade * preco).toFixed(2));
-            break;
-
-          case 7:
-          case 8:
-            totalQuantidadeVendidaBom += parseFloat((v.quantidade * preco).toFixed(2));
-            break;
-
-          case 9:
-          case 10:
-            totalQuantidadeVendidaOtimo += parseFloat((v.quantidade * preco).toFixed(2));
+          case case3:
+            totalQuantidadeVendidaMedio += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
             break;
         }
       });
@@ -178,6 +176,14 @@ export class DashboardComponent implements OnInit {
       return p.id == 2
     });;
     return prod[0].preco;
+  }
+
+  getAllQualidades() {
+    var result;
+    this.httpGet(this.urlProd + "getAllQualidade", res => {
+      result = JSON.parse(res);
+    })
+    return result
   }
 
 
