@@ -19,13 +19,16 @@ declare var Highcharts: any;
   styleUrls: ['./dashboard.scss']
 })
 export class DashboardComponent implements OnInit {
-
+  META_VENDAS: 0;
   urlRH = "https://sigerh.azurewebsites.net/api/";
   urlMV = "https://sigemv.azurewebsites.net/api/";
   urlFinanceiro = "http://trabalhosige.azurewebsites.net/api/";
   urlProd = "https://sigepm.azurewebsites.net/";
 
-
+  
+  //CRIAR A LÓGICA DO RELATORIO 2
+  public pbar1:PieChart={color:"#1ebfae",max:100,label:"Meta de Vendas do mês",current:2};
+  
   listaFuncionarios: any[];
   listaVendas: any[];
   ngOnInit(): void {
@@ -138,7 +141,7 @@ export class DashboardComponent implements OnInit {
       });
 
   }
-
+  
   httpGet(Url, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
