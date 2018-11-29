@@ -33,9 +33,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.listaFuncionarios = [];
     this.listaVendas = [];
-    //this.listaVendas = this.getVendas();
-    //this.listaFuncionarios = this.getFuncionarios();
-    //this.montarRelatorio1();
+    this.listaVendas = this.getVendas();
+    this.listaFuncionarios = this.getFuncionarios();
+    this.montarRelatorio1();
   }
 
   montarRelatorio1(){
