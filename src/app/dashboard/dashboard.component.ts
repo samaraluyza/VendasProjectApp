@@ -100,11 +100,11 @@ export class DashboardComponent implements OnInit {
       dd.name = "Tipos Coque x Valor"
 
       if (totalQuantidadeVendidaOtimo > 0)
-        dd.data.push(CoqueValor.returnCoqueValor("Ótimo", totalQuantidadeVendidaOtimo));
+        dd.data.push(CoqueValor.returnCoqueValor("Qualidade Ótima", totalQuantidadeVendidaOtimo));
       if (totalQuantidadeVendidaBom > 0)
-        dd.data.push(CoqueValor.returnCoqueValor("Bom", totalQuantidadeVendidaBom));
+        dd.data.push(CoqueValor.returnCoqueValor("Qualidade Boa", totalQuantidadeVendidaBom));
       if (totalQuantidadeVendidaMedio > 0)
-        dd.data.push(CoqueValor.returnCoqueValor("Médio", totalQuantidadeVendidaMedio));
+        dd.data.push(CoqueValor.returnCoqueValor("Qualidade Média", totalQuantidadeVendidaMedio));
       //dd.data.push(CoqueValor.returnCoqueValor("Ruim", 250000 - ((index + 1 )) * 70000));
       funciProntos.push(fvm);
       listaDrilldown.push(dd);
