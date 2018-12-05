@@ -25,10 +25,10 @@ export class DashboardComponent implements OnInit {
   urlFinanceiro = "http://trabalhosige.azurewebsites.net/api/";
   urlProd = "https://sigepm.azurewebsites.net/";
 
-  
+  MetadeDeVendas = 460000;
   //CRIAR A LÓGICA DO RELATORIO 2
-  public pbar1:PieChart={color:"#1ebfae",max:100,label:"Meta de Vendas do mês",current:2};
-  
+  public pbar1: PieChart;
+
   listaFuncionarios: any[];
   listaVendas: any[];
   ngOnInit(): void {
@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit {
     this.listaVendas = this.getVendas();
     this.listaFuncionarios = this.getFuncionarios();
     this.montarRelatorio1();
+    this.montarRelatorio2();
   }
 
   montarRelatorio1() {
@@ -69,19 +70,22 @@ export class DashboardComponent implements OnInit {
       })
       vendas.forEach(v => {
         switch (v.qualidade) {
-          case case1:
+          case case1[0].id_qualidade:
             totalQuantidadeVendidaOtimo += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
             break;
 
-          case case2:
+          case case2[0].id_qualidade:
             totalQuantidadeVendidaBom += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
             break;
 
-          case case3:
+          case case3[0].id_qualidade:
             totalQuantidadeVendidaMedio += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
             break;
         }
       });
+      totalQuantidadeVendidaBom = parseFloat(totalQuantidadeVendidaBom.toFixed(2));
+      totalQuantidadeVendidaOtimo = parseFloat(totalQuantidadeVendidaOtimo.toFixed(2));
+      totalQuantidadeVendidaMedio = parseFloat(totalQuantidadeVendidaMedio.toFixed(2));
 
       var fvm = new FuncionarioVendasViewModel();
       fvm.name = fp.Nome;
@@ -141,7 +145,17 @@ export class DashboardComponent implements OnInit {
       });
 
   }
-  
+
+  montarRelatorio2() {
+    var totalVendido = 0;
+    var preco = this.getValorProduto();
+    this.listaVendas.forEach(v => {
+      totalVendido  += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2))
+    });
+
+    this.pbar1 = { color: "#1ebfae", max: this.MetadeDeVendas, label: "Meta de Vendas do mês", current: totalVendido }
+  }
+
   httpGet(Url, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
