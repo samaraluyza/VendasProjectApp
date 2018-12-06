@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
   urlFinanceiro = "http://trabalhosige.azurewebsites.net/api/";
   urlProd = "https://sigepm.azurewebsites.net/";
 
-  MetadeDeVendas = 460000;
+  MetadeDeVendas = 2000000;
   //CRIAR A LÓGICA DO RELATORIO 2
   public pbar1: PieChart;
 
@@ -75,11 +75,11 @@ export class DashboardComponent implements OnInit {
             break;
 
           case case2[0].id_qualidade:
-            totalQuantidadeVendidaBom += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
+            totalQuantidadeVendidaBom += parseFloat((v.quantidade * (preco * 1.2)).toFixed(2));
             break;
 
           case case3[0].id_qualidade:
-            totalQuantidadeVendidaMedio += parseFloat((v.quantidade * (preco * 1.3)).toFixed(2));
+            totalQuantidadeVendidaMedio += parseFloat((v.quantidade * (preco * 1.1)).toFixed(2));
             break;
         }
       });
